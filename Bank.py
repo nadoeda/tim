@@ -22,9 +22,6 @@ class Bank:
                 return 0
         return 1
 
-    '''def repeatUse(self):
-        print('repeat Use')'''
-
     def addCustomer(self, customerId):
 
         self.listCustomer.append(customerId)
