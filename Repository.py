@@ -28,7 +28,7 @@ class Repository():
 
     def write(self):
         for list in self.listBanknote:
-            list.write()
+            print(list)
 
     def writeCountRepository(self):
         print('5000 - ', self.count(5000))
