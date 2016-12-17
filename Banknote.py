@@ -7,14 +7,9 @@ class Banknote:
         self.ratings = ratings
         self.signature = signature
 
-    def write(self):
-        print('id = ', self.id, 'ratings = ', self.ratings)  # 'signature = ', self.signature)
+    def __str__(self):
+        return ('id = ', self.id, 'ratings = ', self.ratings)
 
 
 def generateBanknote(ratings, num):  # возвращает лист банкнот количества num и заданным номиналом
-    list = []
-    i = 0
-    while (i < num):
-        list.append(Banknote(random.randint(100, 1000), ratings))
-        i = i + 1
-    return list
+    return [Banknote(random.randint(100, 1000), ratings) for _ in range(num)]
