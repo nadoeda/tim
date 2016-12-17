@@ -30,10 +30,7 @@ class DigitalSignature:
         key = RSA.importKey(bytes(self.publicKey.exportKey('PEM')))
         h = SHA256.new(message)
         verifier = PKCS1_v1_5.new(key)
-        if verifier.verify(h, signature):
-            return 1
-        else:
-            return 0
+        return verifier.verify(h, signature)
 
     def encrypt(self, bancnote):  # возвращает подпись клиента
         message = str([bancnote.id, bancnote.ratings]).encode('utf-8')
@@ -53,5 +50,3 @@ class DigitalSignature:
         for banknote in list:
             banknote.ratings = self.decrypt(banknote, banknote.ratings)
         return list
-
-    '''def removeSign(self, banknote):'''
