@@ -13,10 +13,11 @@ class Bank:
         self.digitalSign = DigitalSignature()
         self.risk = RISK
         self.repository = Repository()
+        self.repository.initRepository(STARTSUM)
 
     def equality(self, list):  # возвращает 1 - если номиналы купюр равны
         ratings = list[0].ratings
-        all([banknote.ratings != ratings for banknote in list])
+        return all([banknote.ratings == ratings for banknote in list])
 
     def addCustomer(self, customerId):
         self.listCustomer.append(customerId)
@@ -33,17 +34,16 @@ class Bank:
             banknote.signature = self.digitalSign.sign(banknote)
 
     def recv(self, banknote, id):
-        if (self.digitalSign.verify(banknote) == False):
-            print('Error - signature is not authentic')
-            return False
-        else:
-            if (self.repository.countSignature(banknote.signature) != 0):
-                print('Error - repeat use banknote')
-                return False
-            else:
-                self.repository.add(banknote)
-                self.listAccount[id].increase(banknote.ratings)
-                self.listAccount[id].write()
-                self.repository.writeCountRepository()
-                return True
-
+        try:
+            if (self.digitalSign.verify(banknote)):
+                try:
+                    if (self.repository.countSignature(banknote.signature) == 0):
+                        self.repository.add(banknote)
+                        self.listAccount[id].increase(banknote.ratings)
+                        self.listAccount[id].write()
+                        self.repository.writeCountRepository()
+                        return True
+                except BaseException:
+                    raise ('Error - repeat use banknote')
+        except BaseException:
+            raise ('Error - signature is not authentic')
