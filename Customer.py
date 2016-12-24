@@ -19,10 +19,18 @@ class Customer:
         self.repository.writeCountRepository()
 
     def increase(self, num):
-        self.sum = self.sum + num
+        try:
+            if num > 0:
+                self.sum = self.sum + num
+        except BaseException:
+            raise ('Error - nominal is not korrect')
 
     def decrease(self, num):
-        self.sum = self.sum - num
+        try:
+            if num > 0 and self.sum > num:
+                self.sum = self.sum - num
+        except BaseException:
+            raise ('Error - nominal is not korrect')
 
     def write(self):
         print('customer: id =', self.id, ' sum = ', self.sum)
@@ -34,13 +42,16 @@ class Customer:
         return self.repository.getBanknoteRatings(ratings)
 
     def send(self, ratings):
-        if (self.haveBanknote(ratings)):
-            banknote = self.getBanknote(ratings)
-            if (self.bank.recv(banknote, self.id)):
-                self.decrease(banknote.ratings)
-                self.write()
-                self.repository.writeCountRepository()
-            else:
-                print('Error - Send banknote customer')
-        else:
-            print('Error - don\'t have banknote')
+        try:
+            if (self.haveBanknote(ratings)):
+                banknote = self.getBanknote(ratings)
+                try:
+                    if (self.bank.recv(banknote, self.id)):
+                        self.decrease(banknote.ratings)
+                        self.write()
+                        self.repository.writeCountRepository()
+                        return True
+                except BaseException:
+                    raise ('Error - Send banknote customer')
+        except BaseException:
+            raise ('Error - don\'t have banknote')
